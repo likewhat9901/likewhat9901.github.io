@@ -14,7 +14,6 @@
       text-align: center;
       border-top: 3px solid black;
       border-bottom: 3px solid black;
-      box-shadow: 5px 5px 5px black ;
       padding: 5px 0; margin-top: 1.5vh;
     }
 
@@ -39,7 +38,7 @@
     .card{
       border: 1px solid black;
       border-radius: 1vw;
-      width: 12.2vw; height: 16vh;
+      width: 8.4rem; height: 11.9rem;
       margin: auto 1.5vw;
       box-sizing: border-box;
       background-size: cover;
@@ -54,7 +53,7 @@
       justify-content: center;
     }
     .deck .card{
-      background-image: url(./images/back_card.gif);
+      background-image: url(./images/back.gif);
       background-position: center;
     }
     .rule{
@@ -96,15 +95,16 @@
     }
     .show{
       width: 18vw; height: 3vh; padding: 0.1rem 0.1rem 0.1rem 1rem;
-      background-color: white;
+      background-color: white; 
       border-radius: 0.5vw;
     }
     .bet{
-      margin-bottom: 1vh;
+      margin-bottom: 1vh; display: flex;
+      align-items: center;
     }
     .bet input{
-      width: 9vw;
-      margin-left: 0.5rem;
+      width: 9.8vw; line-height: 2vh;
+      margin-left: 0.5rem; border: 0px;
     }
 
     #deposit{
@@ -117,10 +117,11 @@
   <h1>블랙잭 게임</h1>
   <section>
     <div class="play computer">
-      <div class="card" id="c_first">카드1</div>
-      <div class="card" id="c_second">카드2</div>
-      <div class="card" id="c_third">카드3</div>
-      <div class="card" id="c_fourth">카드4</div>
+      <div class="card computer" id="c_first">카드1</div>
+      <div class="card computer" id="c_second">카드2</div>
+      <div class="card computer" id="c_third">카드3</div>
+      <div class="card computer" id="c_fourth">카드4</div>
+      <div class="card computer" id="c_fourth">카드5</div>
     </div>
     <div class="deck">
       <div class="card">카드덱</div>
@@ -132,32 +133,89 @@
       </p>
     </div>
     <div class="play user">
-      <div class="card">카드1</div>
-      <div class="card">카드2</div>
-      <div class="card">카드3</div>
-      <div class="card">카드4</div>
+      <div class="card player">카드1</div>
+      <div class="card player">카드2</div>
+      <div class="card player">카드3</div>
+      <div class="card player">카드4</div>
+      <div class="card player">카드5</div>
     </div>
     <div class="control">
-      <button type="button" class="button gameStart" onclick="shuffle();">게임시작</button>
+      <button type="button" class="button gameStart" onclick="game_start();">게임시작</button>
       <button type="button" class="button double">더블다운</button>
-      <button type="button" class="button hit">히트(한장더)</button>
-      <button type="button" class="button stand">스탠드(Stop)</button>
+      <button type="button" class="button hit" onclick="hit();">히트(한장더)</button>
+      <button type="button" class="button stand" onclick="stand();">스탠드(Stop)</button>
       <div class="money">
-        <div class="show bet">베팅금액: <input type="text" name="" id=""></div>
+        <div class="show bet"><label for="bet_input">베팅금액: </label>
+          <input type="text" name="" id="bet_input">
+        </div>
         <div class="show myBudget">남은금액 : <span id="deposit">60,000</span></div>
       </div>
     </div>
   </section>
 
   <script>
-    const cardArr = ["one", "two", "three", "four", "five", "six",
-    "seven", "eight", "nine", "ten", "jack", "queen", "king", "ace"]
+    const card_computer = document.querySelectorAll(".card.computer");
+    const card_player = document.querySelectorAll(".card.player");
+
+    function game_start(){
+      hit_count = 2;
+      std_count = 1;
+      for(let i=0 ; i<5 ; i++){
+        card_computer[i].style.background = "";
+        card_player[i].style.background = "";
+      }
+      clearInterval(interval);
+
+      cardSet_p(0);
+      cardSet_p(1);
+
+      cardSet_c(0);
+      card_computer[1].style.background =
+        `url('./images/back.gif') no-repeat 0 0 / cover`;
+    }
+
+    let hit_count = 2;
+    function hit(){
+      if(hit_count > 4) return;
+
+      cardSet_p(hit_count);
+      hit_count++;
+    }
+
+    let interval, std_count = 1;
+    function stand(){
+      interval = setInterval(()=>{
+        if(std_count > 4) {
+          clearInterval(interval);
+          return;
+        };
+        // card_computer[1].style.background = "";
+        cardSet_c(std_count);
+        std_count++;
+      }, 1000);
+    }
+
+
+    let r_cardNum, suit_position;
 
     function shuffle(){
-      let card = document.getElementsByClassName("card");
-      for(let i=0 ; )
-      card[0].style.backgroundImage = "url('./images/three.gif')";
+      r_cardNum = Math.floor(Math.random()*13+1);
 
+      const r_suitNum = Math.floor(Math.random()*4);
+      const suitsArr = ["0 0" ,"0 33.3%", "0 66.6%", "0 100%"];
+      suit_position = suitsArr[r_suitNum];
+      
+      console.log(r_cardNum, suit_position);
+    }
+    function cardSet_p(index){
+      shuffle();
+      card_player[index].style.background =
+        `url('./images/${r_cardNum}.gif') no-repeat ${suit_position} / 100% 400%`;
+    }
+    function cardSet_c(index){
+      shuffle();
+      card_computer[index].style.background =
+        `url('./images/${r_cardNum}.gif') no-repeat ${suit_position} / 100% 400%`;
     }
   </script>
 </body>
